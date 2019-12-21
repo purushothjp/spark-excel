@@ -6,6 +6,8 @@ import com.norbitltd.spoiwo.model.{
   HasIndex,
   Table,
   TableColumn,
+  TableStyle,
+  TableStyleName,
   Cell => WriteCell,
   Row => WriteRow,
   Sheet => WriteSheet
@@ -165,7 +167,12 @@ class TableDataLocator(
     val maxCol = sheet.rows.map(_.cells.maxIndex).sorted.lastOption.getOrElse(0)
     val minCol = sheet.rows.flatMap(_.cells.flatMap(_.index)).sorted.headOption.getOrElse(0)
     val table =
-      Table(cellRange = CellRange(rowRange = (minRow, maxRow), columnRange = (minCol, maxCol)), name = tableName)
+      Table(
+        cellRange = CellRange(rowRange = (minRow, maxRow), columnRange = (minCol, maxCol)),
+        style = TableStyle(TableStyleName.TableStyleMedium2, showRowStripes = true),
+        enableAutoFilter = true,
+        name = tableName
+      )
     val tableWithPotentialHeader =
       header.foldLeft(table)(
         (tbl, hdr) => tbl.withColumns(hdr.zipWithIndex.map { case (h, i) => TableColumn(h, i) }.toList)
